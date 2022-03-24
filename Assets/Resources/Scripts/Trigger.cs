@@ -5,29 +5,34 @@ using UnityEngine;
 public class Trigger : MonoBehaviour
 {
     GameObject go;
-    int fRandom;
+    int iRandomNumber;
+    float fRandomOffset;
     [SerializeField]
     private Transform Spawnner;
-    private Vector3 vRandomOffset;
+    private Vector3 vRandomLocation, vRandomOffset;
 
     private void Start()
     {
-        fRandom = UnityEngine.Random.Range(5, 5);
-
+        iRandomNumber = UnityEngine.Random.Range(2, 10);
         go = Resources.Load<GameObject>("Prefabs/NPC");
+
     }
     private void OnTriggerEnter(Collider other)
     {
-        vRandomOffset = new Vector3(UnityEngine.Random.Range(-7, 7), 0, 0);
+
         if (other.gameObject.tag == "Player")
         {
 
-            for (int i = 0; i < fRandom; i++)
+            for (int i = 0; i < iRandomNumber; i++)
             {
-
-                GameObject.Instantiate(go, Spawnner.position + vRandomOffset, Quaternion.identity, Spawnner);
+                vRandomLocation = new Vector3(UnityEngine.Random.Range(-6, 6), 0, 0);
+                GameObject.Instantiate(go, Spawnner.position + vRandomLocation, Quaternion.identity, Spawnner);
+                // float fRandomScale = Random.Range(0.5f, 1f);
+                // go.transform.localScale = new Vector3(go.transform.localScale.x * fRandomScale, go.transform.localScale.y * fRandomScale, go.transform.localScale.z * fRandomScale);
             }
         }
     }
+
+
 
 }
