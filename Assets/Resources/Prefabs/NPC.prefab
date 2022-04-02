@@ -2008,7 +2008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719aa4e66ccb2d44db198575b75e23cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fSpeed: 4
+  fSpeed: 0
   rb: {fileID: 8811917446618517289}
   anim: {fileID: 8811917446618517291}
 --- !u!1 &8811917446652461796

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class Bhaya : MonoBehaviour
+public class Bhaya : Unit, IGetClosestTarget
 {
     [SerializeField]
     float fSpeed = 1f;
@@ -14,6 +14,7 @@ public class Bhaya : MonoBehaviour
     [SerializeField]
     Animator anim;
     string[] tags = { "Object", "Enemy" };
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,10 +24,10 @@ public class Bhaya : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (!bBhayaDied)
         {
             Movement();
-
         }
 
     }
@@ -50,26 +51,27 @@ public class Bhaya : MonoBehaviour
                     fSpeed = 0;
 
                 }
-
-                bBhayaDied = true;
-                anim.SetBool("bDied", bBhayaDied);
+                Death();
                 //StartCoroutine(Died());
             }
             else if (collision.gameObject.tag == "Object")
             {
-
-                bBhayaDied = true;
-                fSpeed = 0;
-                anim.SetBool("bDied", bBhayaDied);
+                Death();
             }
 
         }
     }
-    IEnumerator Died()
+
+    public Transform CloseTarget(Transform t)
     {
-        yield return new WaitForSeconds(5f);
-        bBhayaDied = true;
-        anim.SetBool("bDied", bBhayaDied);
+        return null;
     }
 
+    public override void Death()
+    {
+        bBhayaDied = true;
+        fSpeed = 0;
+        anim.SetBool("bDied", bBhayaDied);
+        GameObject.Destroy(this.gameObject, 2);
+    }
 }

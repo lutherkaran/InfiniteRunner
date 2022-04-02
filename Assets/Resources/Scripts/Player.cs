@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Unit
 {
     [SerializeField]
     float fSpeed = 1f;
@@ -26,8 +26,6 @@ public class Player : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         anim.Play("Idle");
-        /*Debug.Log("Press a mouse button to start");*/
-        // Debug.Log("YEs");
     }
 
     // Update is called once per frame
@@ -54,10 +52,20 @@ public class Player : MonoBehaviour
     private void Movement()
     {
 
-        anim.SetFloat("fSpeed", fSpeed, 0.1f, Time.deltaTime);
-        this.transform.Translate(Vector3.forward * fSpeed * Time.deltaTime);
-        float fHorizontal = Input.GetAxis("Horizontal");
-        move = new Vector3(fHorizontal * fSpeed * Time.deltaTime, 0f, 0f);
+        // this.transform.Translate(Vector3.forward * fSpeed * Time.deltaTime);
+        float fHorizontal = Input.GetAxisRaw("Horizontal");
+        float fVertical = Input.GetAxisRaw("Vertical");
+        if (fVertical >= 0)
+        {
+            move = new Vector3(fHorizontal * fSpeed * Time.deltaTime, 0f, fVertical * fSpeed * Time.deltaTime);
+        }
+        /* if (fVertical == 0 && (fHorizontal > 0 || fHorizontal < 0))
+         {
+             move = new Vector3(fHorizontal * fSpeed * Time.deltaTime, 0f, 0f);
+         }*/
+
+        //Debug.Log("Move-Mag:" + move.magnitude);
+        anim.SetFloat("fSpeed", move.magnitude * fSpeed, 0.1f, Time.deltaTime);
         transform.position += move;
 
     }
@@ -89,18 +97,18 @@ public class Player : MonoBehaviour
             anim.SetBool("bJump", false);
 
         }
-        else
-        {
-            bCanJump = false;
-
-        }
         if (collision.collider.CompareTag("Object"))
         {
-            bPlayerDied = true;
-            if (bPlayerDied)
-                anim.Play("Death");
 
+            Death();
         }
+
     }
 
+    public override void Death()
+    {
+        bPlayerDied = true;
+        if (bPlayerDied)
+            anim.Play("Death");
+    }
 }

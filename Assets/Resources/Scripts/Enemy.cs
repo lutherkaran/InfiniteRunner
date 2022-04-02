@@ -2,12 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Unit, IGetClosestTarget
 {
     bool bEnemyDied = false;
     bool bEnemyFight = false;
     [SerializeField]
     Animator anim;
+    GameObject[] go;
+    List<Bhaya> npcList;
+    List<Transform> transforms;
+    public void Start()
+    {
+        npcList = new List<Bhaya>();
+        transforms = new List<Transform>();
+    }
+
+
+    public void Update()
+    {
+
+        npcList.AddRange(FindObjectsOfType<Bhaya>());
+        if (npcList != null)
+        {
+            foreach (Bhaya bhaya in npcList)
+            {
+                Transform target = CloseTarget(bhaya.gameObject.transform);
+                this.transform.LookAt(target);
+            }
+            npcList.Clear();
+            transforms.Clear();
+
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
 
@@ -16,16 +43,34 @@ public class Enemy : MonoBehaviour
             bEnemyFight = true;
             if (bEnemyFight)
                 anim.Play("EnemyFight");
-            bEnemyDied = true;
-            anim.SetBool("bDied", bEnemyDied);
+            Death();
             // StartCoroutine(Died());
         }
     }
-    IEnumerator Died()
+
+    public Transform CloseTarget(Transform enemy)
     {
-        yield return new WaitForSeconds(5f);
-        bEnemyDied = true;
-        anim.SetBool("bDied", bEnemyDied);
+        transforms.Add(enemy);
+
+        Transform tMin = null;
+        float minDist = Mathf.Infinity;
+        Vector3 currentPos = transform.position;
+        foreach (Transform trans in enemy)
+        {
+            float dist = Vector3.Distance(trans.position, currentPos);
+            if (dist < minDist)
+            {
+                tMin = trans;
+                minDist = dist;
+            }
+        }
+        return tMin;
     }
 
+    public override void Death()
+    {
+        bEnemyDied = true;
+        anim.SetBool("bDied", bEnemyDied);
+        GameObject.Destroy(this.gameObject, 2);
+    }
 }
