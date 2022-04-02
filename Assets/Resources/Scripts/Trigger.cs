@@ -30,7 +30,14 @@ public class Trigger : MonoBehaviour
     private void DisplayingText()
     {
         eArithmeticOperations = (ArithmeticSigns)iRandomSign;
-        floatingText.text = eArithmeticOperations.ToString() + ": " + iRandomNumber;
+        if (eArithmeticOperations.ToString() == ArithmeticSigns.KILLALL.ToString())
+        {
+            floatingText.text = eArithmeticOperations.ToString();
+        }
+        else
+        {
+            floatingText.text = eArithmeticOperations.ToString() + ": " + iRandomNumber;
+        }
         // Debug.Log("Sign: " + eArithmeticOperations.ToString() + " RandomNumber: " + iRandomNumber);
     }
 
@@ -51,7 +58,7 @@ public class Trigger : MonoBehaviour
             case ArithmeticSigns.ADD:
                 if (bTrigger)
                 {
-                    Debug.Log("Add");
+
                     toSpawn = (totalNumber + iRandomNumber) - totalNumber;
                     totalNumber += iRandomNumber;
                     for (int i = 0; i < toSpawn; i++)
@@ -119,8 +126,8 @@ public class Trigger : MonoBehaviour
 
     private void FindingRandomNumber()
     {
-        iRandomSign = UnityEngine.Random.Range(0, 4);
-        iRandomNumber = UnityEngine.Random.Range(1, 5);
+        iRandomSign = UnityEngine.Random.Range(0, 5);
+        iRandomNumber = UnityEngine.Random.Range(1, 20);
     }
 
     private void Caching()
@@ -137,7 +144,8 @@ public class Trigger : MonoBehaviour
         Caching();
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("Triggered");
+            /*Debug.Log("Triggered");
+            */
             bTrigger = true;
             FindingTotalNumberToSpawn();
         }

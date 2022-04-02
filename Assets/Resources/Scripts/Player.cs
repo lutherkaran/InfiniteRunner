@@ -55,9 +55,11 @@ public class Player : Unit
         // this.transform.Translate(Vector3.forward * fSpeed * Time.deltaTime);
         float fHorizontal = Input.GetAxisRaw("Horizontal");
         float fVertical = Input.GetAxisRaw("Vertical");
+        anim.SetFloat("fSpeed", fVertical * fSpeed, 0.01f, Time.deltaTime);
         if (fVertical >= 0)
         {
-            move = new Vector3(fHorizontal * fSpeed * Time.deltaTime, 0f, fVertical * fSpeed * Time.deltaTime);
+            move = new Vector3(fHorizontal, 0f, fVertical) * fSpeed * Time.deltaTime;
+            transform.position += move;
         }
         /* if (fVertical == 0 && (fHorizontal > 0 || fHorizontal < 0))
          {
@@ -65,8 +67,6 @@ public class Player : Unit
          }*/
 
         //Debug.Log("Move-Mag:" + move.magnitude);
-        anim.SetFloat("fSpeed", move.magnitude * fSpeed, 0.1f, Time.deltaTime);
-        transform.position += move;
 
     }
     private void FixedUpdate()
